@@ -21,6 +21,15 @@ import unittest
 
 unittest.assertIs(a > b, True)
 """
+PYTHON_39_SYNTAX = """
+with (a() as b, c() as d):
+    pass
+
+@(lambda f: f)
+def g():
+    pass
+"""
+
 NOT_YET_FIXED = ("C402", "C406", "C408", "C409", "C410")
 
 
@@ -155,6 +164,11 @@ def test_empty_stays_empty(refactor):
 def test_error_on_invalid_syntax(source_code, refactor):
     with pytest.raises(Exception):
         assert shed(source_code=source_code, refactor=refactor)
+
+
+@pytest.mark.parametrize("refactor", [True, False])
+def test_works_with_python39_syntax(refactor):
+    shed(source_code=PYTHON_39_SYNTAX, refactor=refactor, min_version=(3, 9))
 
 
 python_files = []
